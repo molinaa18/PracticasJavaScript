@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica 10</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Registro de Personas</h1>
+    <p>Rellena los datos para añadir personas al sistema. Debes registrar exactamente 5 personas.</p>
+
+    <div class="formulario">
+        <input type="text" id="input_nombre" placeholder="Nombre" required>
+        <input type="text" id="input_apellidos" placeholder="Apellidos" required>
+        <input type="number" id="input_edad" placeholder="Edad" required>
+    </div>
+
+    <div class="estado_registro">
+        <p>Registros completados: <span id="contador">0</span> de 5</p>
+    </div>
+
+    <div class="botones">
+        <button id="btn_anadir">Añadir</button>
+        <!-- El botón está deshabilitado por defecto para asegurar que se hacen los 5 registros -->
+        <button id="btn_mostrar" class="btn-secundario" disabled>Mostrar</button>
+    </div>
+
+    <div id="resultados" class="resultado_box">
+        <p>Esperando datos...</p>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
