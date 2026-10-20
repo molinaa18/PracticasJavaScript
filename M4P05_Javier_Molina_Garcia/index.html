@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica 5</title>
+
+    <!-- Librería CSS de Leaflet para visualizar el mapa correctamente -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-color: #f4f4f9;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #mensaje_estado {
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Dimensiones exactas solicitadas en el enunciado */
+        #mapa {
+            width: 500px;
+            height: 500px;
+            margin: 0 auto;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            display: none; /* Oculto hasta obtener las coordenadas */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<h1>Geolocalización con OpenStreetMap</h1>
+<button id="btn_localizar">Obtener mi ubicación</button>
+
+<div id="mensaje_estado">Haz clic en el botón y acepta los permisos del navegador.</div>
+
+<div id="mapa"></div>
+
+<!-- Librería JS de Leaflet para el control del mapa -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const btnLocalizar = document.getElementById("btn_localizar");
+        const divMapa = document.getElementById("mapa");
+        const mensajeEstado = document.getElementById("mensaje_estado");
+
+        // Evento para iniciar la geolocalización
+        btnLocalizar.addEventListener("click", function() {
+            if ("geolocation" in navigator) {
+                mensajeEstado.textContent = "Solicitando permisos de ubicación...";
+
+                // Petición de coordenadas al navegador
+                navigator.geolocation.getCurrentPosition(mostrarMapa, manejarError);
+            } else {
+                mensajeEstado.textContent = "Error: El navegador no soporta geolocalización.";
+            }
+        });
+
+        // Función ejecutada en caso de éxito al obtener coordenadas
+        function mostrarMapa(posicion) {
+            const latitud = posicion.coords.latitude;
+            const longitud = posicion.coords.longitude;
+
+            mensajeEstado.textContent = `Coordenadas: Latitud ${latitud.toFixed(5)} | Longitud ${longitud.toFixed(5)}`;
+
+            // Hacer visible el contenedor del mapa
+            divMapa.style.display = "block";
+
+            // Deshabilitar botón para evitar cargar múltiples mapas en el mismo contenedor
+            btnLocalizar.disabled = true;
+
+            // Inicializar mapa centrado en las coordenadas obtenidas, con zoom 15
+            const mapa = L.map('mapa').setView([latitud, longitud], 15);
+
+            // Cargar la capa plana (Tiles) de OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; Colaboradores de OpenStreetMap'
+            }).addTo(mapa);
+
+            // Insertar marcador en la ubicación exacta
+            L.marker([latitud, longitud]).addTo(mapa);
+        }
+
+        // Función para gestionar rechazo de permisos o fallos de conexión
+        function manejarError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    mensajeEstado.textContent = "Error: Permiso de ubicación denegado por el usuario.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    mensajeEstado.textContent = "Error: Información de ubicación no disponible.";
+                    break;
+                case error.TIMEOUT:
+                    mensajeEstado.textContent = "Error: Tiempo de espera agotado para obtener ubicación.";
+                    break;
+                default:
+                    mensajeEstado.textContent = "Error desconocido al intentar geolocalizar.";
+                    break;
+            }
+        }
+    });
+</script>
+</body>
+</html>

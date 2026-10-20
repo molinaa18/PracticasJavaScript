@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Práctica 6</title>
+</head>
+
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>
+
+<script>
+    document.addEventListener('DOMContentLoaded', draw);
+
+    function draw() {
+        var canvas = document.getElementById('canvas');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+
+            // 1. Triángulo superior
+            ctx.beginPath();
+            ctx.moveTo(25, 25);
+            ctx.lineTo(105, 25);
+            ctx.lineTo(25, 105);
+            ctx.lineTo(25, 25);
+            ctx.closePath();
+            // Aplicar relleno negro en lugar de solo dibujar el borde (stroke)
+            ctx.fillStyle = "black";
+            ctx.fill();
+
+            // Triángulo inferior (Sin cambios)
+            ctx.beginPath();
+            ctx.moveTo(125, 125);
+            ctx.lineTo(125, 45);
+            ctx.lineTo(45, 125);
+            ctx.closePath();
+            ctx.stroke();
+
+            // 2. Círculo
+            ctx.beginPath();
+            // arc(x, y, radio, anguloInicial, anguloFinal)
+            // Corrección: Añadido el operador de multiplicación (*)
+            ctx.arc(250, 80, 50, 0, Math.PI * 2);
+            // Establecer el color de relleno
+            ctx.fillStyle = "#3070d4";
+            ctx.fill();
+        }
+    }
+</script>
+</body>
+</html>
